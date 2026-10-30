@@ -173,6 +173,12 @@ if mods ["bobpower"] then
     boiler["bob-boiler-3"].energy_source.effectivity = 0.8
     boiler["bob-boiler-4"].energy_source.effectivity = 0.85
     boiler["bob-boiler-5"].energy_source.effectivity = 0.9
+    boiler["bob-oil-boiler"].energy_source.effectivity = 0.77
+-- ! Отсутствуют locale ИСПРАВИТЬ
+    boiler["bob-oil-boiler-2"].energy_source.effectivity = 0.82
+    boiler["bob-oil-boiler-3"].energy_source.effectivity = 0.87
+    boiler["bob-oil-boiler-4"].energy_source.effectivity = 0.92
+-- TODO: добавить изменение потребления энергии и КПД для всех бойлеров, генераторов и насосов из мода BobPower
     solar["solar-panel"].production = "60kW"
 end
 
