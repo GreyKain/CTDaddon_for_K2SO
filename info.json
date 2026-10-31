@@ -1,9 +1,9 @@
 {
-	"name": "CTDaddon_for_K2SO",
+	"name": "CTD-addon-K2SO",
 	"title": "CyberTheDrot's Add-On for K2SO",
 	"description": "Tweaks game mechanics and other mods to match my vision. \n\nИзменяет механики игры и других модов в соответствии с моим видением.",
 	"author": "GreyKain",
-	"version": "2026.10.27",
+	"version": "2026.10.31",
 	"factorio_version": "2.1",
 	"dependencies": [
 		"base >= 2.0.76",

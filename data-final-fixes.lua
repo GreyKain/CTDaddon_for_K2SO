@@ -1,6 +1,7 @@
 -- ##############################################################################################
 -- CTDaddon_for_K2SO: data-final-fixes.lua
 -- Тонкая настройка механик игры и других модов под видение автора.
+-- III стадия
 -- ##############################################################################################
 
 local assembler = data.raw["assembling-machine"]
@@ -174,16 +175,15 @@ if mods ["bobpower"] then
     boiler["bob-boiler-4"].energy_source.effectivity = 0.85
     boiler["bob-boiler-5"].energy_source.effectivity = 0.9
     boiler["bob-oil-boiler"].energy_source.effectivity = 0.77
--- ! Отсутствуют locale ИСПРАВИТЬ
-    boiler["bob-oil-boiler-2"].energy_source.effectivity = 0.82
-    boiler["bob-oil-boiler-3"].energy_source.effectivity = 0.87
-    boiler["bob-oil-boiler-4"].energy_source.effectivity = 0.92
+    boiler["bob-oil-boiler-2"].energy_source.effectivity = 0.82 -- ! Отсутствуют locale ИСПРАВИТЬ
+    boiler["bob-oil-boiler-3"].energy_source.effectivity = 0.87 -- ! Отсутствуют locale ИСПРАВИТЬ
+    boiler["bob-oil-boiler-4"].energy_source.effectivity = 0.92 -- ! Отсутствуют locale ИСПРАВИТЬ
 -- TODO: добавить изменение потребления энергии и КПД для всех бойлеров, генераторов и насосов из мода BobPower
     solar["solar-panel"].production = "60kW"
 end
 
 if mods ["aai-industry"] then
-    -- КПД Твердотопливной турбины-генератора
+    --  КПД Твердотопливной турбины-генератора
     burner_generator["burner-turbine"].burner.effectivity = 0.45
     burner_generator["burner-turbine"].max_power_output = "800kW"
 
