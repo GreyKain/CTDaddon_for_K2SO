@@ -3,7 +3,7 @@
 	"title": "CyberTheDrot's Add-On for K2SO",
 	"description": "Tweaks game mechanics and other mods to match my vision. \n\nИзменяет механики игры и других модов в соответствии с моим видением.",
 	"author": "GreyKain",
-	"version": "2026.10.31",
+	"version": "2026.11.01",
 	"factorio_version": "2.1",
 	"dependencies": [
 		"base >= 2.0.76",
@@ -17,8 +17,10 @@
 		"+ PowerOverload",
 		"+ Repair_Turret",
 		"+ Smart_Inserters",
+		"+ black-rubber-belts-remastered",
 		"+ boblogistics",
 		"+ bobpower",
+		"+ reskins-bobs",
 		"(?) GetWiresBack"
 		]
 }

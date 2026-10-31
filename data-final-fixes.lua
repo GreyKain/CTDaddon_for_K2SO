@@ -1,5 +1,5 @@
 -- ##############################################################################################
--- CTDaddon_for_K2SO: data-final-fixes.lua
+-- CTD-addon-K2SO: data-final-fixes.lua
 -- Тонкая настройка механик игры и других модов под видение автора.
 -- III стадия
 -- ##############################################################################################
@@ -16,13 +16,14 @@ local recipe = data.raw["recipe"]
 local shortcut = data.raw["shortcut"]
 local tech = data.raw["technology"]
 local solar = data.raw["solar-panel"]
+local fluid = data.raw["fluid"]
 
-local add_dependency = CTDmod.lib.tech.add_dependency
-local add_science_pack = CTDmod.lib.tech.add_science_pack
-local remove_prerequisite = CTDmod.lib.tech.remove_prerequisite
-local remove_unlock_recipe = CTDmod.lib.tech.remove_unlock_recipe
-local set_field_for = CTDmod.lib.prototypes.set_field_for
-local rescale_recipes = CTDmod.lib.recipe.rescale_recipes
+local add_dependency = CTD_mod.lib.tech.add_dependency
+local add_science_pack = CTD_mod.lib.tech.add_science_pack
+local remove_prerequisite = CTD_mod.lib.tech.remove_prerequisite
+local remove_unlock_recipe = CTD_mod.lib.tech.remove_unlock_recipe
+local set_field_for = CTD_mod.lib.prototypes.set_field_for
+local rescale_recipes = CTD_mod.lib.recipe.rescale_recipes
 
 -- ##############################################################################################
 -- Скрытие ярлыков зелёных/красных проводов (если не используется GetWiresBack)
@@ -80,6 +81,7 @@ end
 if mods["Smart_Inserters"] then
     add_dependency("si-unlock-offsets", "logistic-science-pack")
     add_dependency("si-unlock-x-diagonals", "logistic-science-pack")
+    add_dependency("si-unlock-all-diagonals", "chemical-science-pack")
 
     if mods["aai-industry"] then
         add_dependency("si-unlock-cross", "burner-mechanics")
@@ -147,8 +149,8 @@ end
 -- Возврат стандартной теплоемкости воде и пару / изменение хар-к бойлеров, паровых двигателей,
 -- насосов, твердотопливных сборщиков/лабораторий/генераторов, солнечной панели
 -- ##############################################################################################
-data.raw.fluid["water"].heat_capacity = "2kJ" -- вода
-data.raw.fluid["steam"].heat_capacity = "0.2kJ" -- пар
+fluid["water"].heat_capacity = "2kJ" -- вода
+fluid["steam"].heat_capacity = "0.2kJ" -- пар
 
     -- КПД паровых движков
 generator["steam-engine"].effectivity = 0.7
@@ -175,9 +177,9 @@ if mods ["bobpower"] then
     boiler["bob-boiler-4"].energy_source.effectivity = 0.85
     boiler["bob-boiler-5"].energy_source.effectivity = 0.9
     boiler["bob-oil-boiler"].energy_source.effectivity = 0.77
-    boiler["bob-oil-boiler-2"].energy_source.effectivity = 0.82 -- ! Отсутствуют locale ИСПРАВИТЬ
-    boiler["bob-oil-boiler-3"].energy_source.effectivity = 0.87 -- ! Отсутствуют locale ИСПРАВИТЬ
-    boiler["bob-oil-boiler-4"].energy_source.effectivity = 0.92 -- ! Отсутствуют locale ИСПРАВИТЬ
+    boiler["bob-oil-boiler-2"].energy_source.effectivity = 0.82
+    boiler["bob-oil-boiler-3"].energy_source.effectivity = 0.87
+    boiler["bob-oil-boiler-4"].energy_source.effectivity = 0.92
 -- TODO: добавить изменение потребления энергии и КПД для всех бойлеров, генераторов и насосов из мода BobPower
     solar["solar-panel"].production = "60kW"
 end
@@ -233,6 +235,31 @@ item["wood"].fuel_value = "2MJ"
 -- 	reactor["fluid-reactor"].energy_source.effectivity = 0.76
 -- 	reactor["fluid-reactor-2"].energy_source.effectivity = 0.88
 -- ##############################################################################################
+
+-- ##############################################################################################
+-- приведение ингредиентов рецептов солнечных панелей от Боба к стандарту Krastorio 2
+-- ##############################################################################################
 if mods ["bobpower"] then
     rescale_recipes("solar-panel", "bob-solar-panel-small", "bob-solar-panel-large")
+end
+-- ##############################################################################################
+
+-- ##############################################################################################
+-- исправление отображения "правильных" иконок на рецептах конвейеров
+-- ##############################################################################################
+if mods ["reskins-bobs"] and mods ["boblogistics"] and mods ["black-rubber-belts-remastered"] then
+    local recipes = {
+        "bob-basic-transport-belt",
+        "transport-belt",
+        "fast-transport-belt",
+        "express-transport-belt",
+        "turbo-transport-belt",
+        "bob-ultimate-transport-belt"
+    }
+    for _, name in ipairs(recipes) do
+        if recipe[name] then
+            recipe[name].icon = nil
+            recipe[name].icons = nil
+        end
+    end
 end

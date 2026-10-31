@@ -1,13 +1,13 @@
 -- ##############################################################################################
 -- CTD-library: library.lua
--- Библиотека функциЙ для CTDaddon's
+-- Библиотека функциЙ для CTD-addon's
 -- ##############################################################################################
-if not CTDmod then CTDmod = {} end
-if not CTDmod.lib then CTDmod.lib = {} end
-if not CTDmod.lib.tech then CTDmod.lib.tech = {} end
-if not CTDmod.lib.shortcuts then CTDmod.lib.shortcuts = {} end
-if not CTDmod.lib.prototypes then CTDmod.lib.prototypes = {} end
-if not CTDmod.lib.recipe then CTDmod.lib.recipe = {} end
+if not CTD_mod then CTD_mod = {} end
+if not CTD_mod.lib then CTD_mod.lib = {} end
+if not CTD_mod.lib.tech then CTD_mod.lib.tech = {} end
+if not CTD_mod.lib.shortcuts then CTD_mod.lib.shortcuts = {} end
+if not CTD_mod.lib.prototypes then CTD_mod.lib.prototypes = {} end
+if not CTD_mod.lib.recipe then CTD_mod.lib.recipe = {} end
 
 local tech = data.raw["technology"]
 local recipe = data.raw["recipe"]
@@ -41,7 +41,7 @@ local ITEM_TYPES = {
 
 -------------------------------------------------------------------------------------------------
 --- Вспомогательная функция проверки существования предмета
----@param item_name string Название предмета
+---@param item_name string      Название предмета
 local function item_exists(item_name)
     if not item_name then return false end
     for _, type_name in ipairs(ITEM_TYPES) do
@@ -54,11 +54,11 @@ end
 
 -------------------------------------------------------------------------------------------------
 --- Добавляет зависимость к технологии, если её ещё нет.
----@param tech_name string  идентификатор зависимой технологии
----@param dependency  string  идентификатор требуемой технологии
+---@param tech_name string      Идентификатор зависимой технологии
+---@param dependency  string    Идентификатор требуемой технологии
 ---@return boolean
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.tech.add_dependency(tech_name, dependency)
+function CTD_mod.lib.tech.add_dependency(tech_name, dependency)
     if not tech or not tech[tech_name] then
         error("ОШИБКА: Технология '" .. tech_name .. "' не найдена!")
     end
@@ -69,8 +69,8 @@ function CTDmod.lib.tech.add_dependency(tech_name, dependency)
     local target = tech[tech_name]
     target.prerequisites = target.prerequisites or {}
 
-    for _, prereq in ipairs(target.prerequisites) do
-        if prereq == dependency then
+    for _, prerequisite in ipairs(target.prerequisites) do
+        if prerequisite == dependency then
             log("ИНФО: Технология '" .. tech_name .. "' уже зависит от '" .. dependency .. "'")
             return true
         end
@@ -82,31 +82,31 @@ function CTDmod.lib.tech.add_dependency(tech_name, dependency)
 end
 
 -------------------------------------------------------------------------------------------------
---- Удаляет все вхождения указанного предварительного условия из технологии.
----@param tech_name string
----@param prereq_name string
+--- Удаляет зависимость из технологии.
+---@param tech_name string              Наименование технологии
+---@param prerequisite_name string      Наименование зависимости
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.tech.remove_prerequisite(tech_name, prereq_name)
+function CTD_mod.lib.tech.remove_prerequisite(tech_name, prerequisite_name)
     local target = tech and tech[tech_name]
     if not (target and target.prerequisites) then
         error("ОШИБКА: Технология '" .. tech_name .. "' не найдена!")
     end
     for i = #target.prerequisites, 1, -1 do
-        if target.prerequisites[i] == prereq_name then
+        if target.prerequisites[i] == prerequisite_name then
             table.remove(target.prerequisites, i)
-            log("ИНФО: Убрана зависимость - '" .. tech_name .. "' теперь не требует '" .. prereq_name .. "'")
+            log("ИНФО: Убрана зависимость - '" .. tech_name .. "' теперь не требует '" .. prerequisite_name .. "'")
         end
     end
 end
 
 -------------------------------------------------------------------------------------------------
 --- Безопасно устанавливает поле для набора прототипов по имени.
----@param prototypes table
----@param names string[]
----@param field string
----@param value any
+---@param prototypes table      Наименование прототипа
+---@param names string[]        Список имен прототипа
+---@param field string          Наименование поля
+---@param value any             Новое значение поля
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.prototypes.set_field_for(prototypes, names, field, value)
+function CTD_mod.lib.prototypes.set_field_for(prototypes, names, field, value)
     if not prototypes then
         return
     end
@@ -120,11 +120,11 @@ end
 
 -------------------------------------------------------------------------------------------------
 --- Добавляет требование научного пакета к технологии
----@param tech_name string Название технологии
----@param science_pack string Название научного пакета
----@param amount integer Количество (по умолчанию 1)
+---@param tech_name string      Название технологии
+---@param science_pack string   Название научного пакета
+---@param amount integer        Количество (по умолчанию 1)
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.tech.add_science_pack(tech_name, science_pack, amount)
+function CTD_mod.lib.tech.add_science_pack(tech_name, science_pack, amount)
     amount = amount or 1
     if not tech[tech_name] then
         error("ОШИБКА: Технология '" .. tech_name .. "' не найдена!")
@@ -156,10 +156,10 @@ end
 
 -------------------------------------------------------------------------------------------------
 --- Удаляет разблокировку рецепта технологией
----@param tech_name string Название технологии
----@param recipe_name string Название рецепта
+---@param tech_name string      Название технологии
+---@param recipe_name string    Название рецепта
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.tech.remove_unlock_recipe(tech_name, recipe_name)
+function CTD_mod.lib.tech.remove_unlock_recipe(tech_name, recipe_name)
     if not tech[tech_name] then
         error("ОШИБКА: Технология '" .. tech_name .. "' не найдена!")
         return false
@@ -179,11 +179,12 @@ end
 
 -------------------------------------------------------------------------------------------------
 --- Пересчитывает ингредиенты рецепта-источника и записывает в два целевых рецепта без создания.
+--- Для создания большой и малой версий
 --- @param source_recipe string  Имя рецепта-источника (например, "solar-panel")
 --- @param small_recipe string   Имя рецепта малой версии (например, "small-solar-panel")
 --- @param large_recipe string   Имя рецепта большой версии (например, "large-solar-panel")
 -------------------------------------------------------------------------------------------------
-function CTDmod.lib.recipe.rescale_recipes (source_recipe, small_recipe, large_recipe)
+function CTD_mod.lib.recipe.rescale_recipes (source_recipe, small_recipe, large_recipe)
     local src = recipe[source_recipe]
     if not src then
         log("ОШИБКА: Не найден рецепт источник: " .. source_recipe)
